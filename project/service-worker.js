@@ -17,7 +17,12 @@ limitations under the License.
 importScripts('workbox-sw.dev.v2.0.0.js');
 
 const workboxSW = new self.WorkboxSW();
-workboxSW.precache([]);
+workboxSW.precache([
+  {
+    "url": "img/amp_logo_white.svg",
+    "revision": "ff1c832025faf6ebb36c3385ee1434c5"
+  }
+]);
 
 self.addEventListener('install', (event) => {
     const urls = [
