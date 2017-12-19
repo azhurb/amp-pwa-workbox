@@ -105,6 +105,7 @@ limitations under the License.
     }
   </style>
   <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <script async custom-element="amp-install-serviceworker" src="https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js"></script>
 </head>
 <body>
   <header class="header">
@@ -145,5 +146,10 @@ limitations under the License.
       </li>
     </ul>
   </div>
+  <amp-install-serviceworker
+          src="/service-worker.js"
+          layout="nodisplay"
+          data-iframe-src="/install-service-worker.html">
+  </amp-install-serviceworker>
 </body>
 </html>
