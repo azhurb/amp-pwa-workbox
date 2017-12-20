@@ -21,6 +21,10 @@ workboxSW.precache([
   {
     "url": "img/amp_logo_white.svg",
     "revision": "ff1c832025faf6ebb36c3385ee1434c5"
+  },
+  {
+    "url": "offline.html",
+    "revision": "8b1c76611091a79b6d13319060236d95"
   }
 ]);
 
@@ -33,3 +37,20 @@ self.addEventListener('install', (event) => {
 const cacheName = workboxSW.runtimeCacheName;
 event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(urls)));
 });
+
+workboxSW.router.registerRoute(/(.*)\/articles\/(.*)html/, args => {
+    return workboxSW.strategies.networkFirst().handle(args).then(response => {
+        if (!response) {
+            return caches.match('offline.html');
+        }
+        return response;
+    });
+});
+
+workboxSW.router.registerRoute(/(.*)\.(?:js|css|png|gif|jpg|svg)/,
+    workboxSW.strategies.cacheFirst()
+);
+
+workboxSW.router.registerRoute(/(.*)cdn\.ampproject\.org(.*)/,
+    workboxSW.strategies.staleWhileRevalidate()
+);
