@@ -23,13 +23,15 @@ self.addEventListener('install', (event) => {
     const urls = [
         'https://cdn.ampproject.org/v0.js',
         'https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js',
-        'https://cdn.ampproject.org/shadow-v0.js'
+        'https://cdn.ampproject.org/shadow-v0.js',
+        'index.html',
+        '/'
     ];
-const cacheName = workboxSW.runtimeCacheName;
-event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(urls)));
+    const cacheName = workboxSW.runtimeCacheName;
+    event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(urls)));
 });
 
-workboxSW.router.registerRoute(/(.*)\/articles\/(.*)html/, args => {
+workboxSW.router.registerRoute(/(.*)((index|\/articles\/)(.*)html)|(.*)\/$/, args => {
     return workboxSW.strategies.networkFirst().handle(args).then(response => {
         if (!response) {
             return caches.match('offline.html');
