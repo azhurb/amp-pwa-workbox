@@ -57,6 +57,14 @@ workboxSW.precache([
   {
     "url": "icons/icon-96x96.png",
     "revision": "3c0ded96a9d6cde35894280216bfb5d9"
+  },
+  {
+    "url": "shell.html",
+    "revision": "da8bb158bace9b28818e931d4e3ece7b"
+  },
+  {
+    "url": "js/app.js",
+    "revision": "db1d2b5feae1088c45c76ad727a175dd"
   }
 ]);
 
@@ -73,12 +81,10 @@ self.addEventListener('install', (event) => {
 });
 
 workboxSW.router.registerRoute(/(.*)((index|\/articles\/)(.*)html)|(.*)\/$/, args => {
-    return workboxSW.strategies.networkFirst().handle(args).then(response => {
-        if (!response) {
-            return caches.match('offline.html');
-        }
-        return response;
-    });
+    if (args.event.request.mode !== 'navigate') {
+        return workboxSW.strategies.cacheFirst().handle(args);
+    }
+    return caches.match('/shell.html', {ignoreSearch: true});
 });
 
 workboxSW.router.registerRoute(/(.*)\.(?:js|css|png|gif|jpg|svg)/,
